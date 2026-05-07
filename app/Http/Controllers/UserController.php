@@ -14,7 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = User::orderBy('updated_at', 'desc')->get();
+        $user = User::whereIn('role', ["0", "1"])->orderBy('updated_at', 'desc')->get();
         return view('backend.v_user.index', [
             'judul' => 'Data User',
             'index' => $user
