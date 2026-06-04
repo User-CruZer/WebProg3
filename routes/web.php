@@ -8,13 +8,16 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderController;
+// use App\Http\Controllers\RajaOngkirController;
+use App\Http\Controllers\RajaOngkirControllerV2;
+use Illuminate\Support\Facades\Http;
 
 
 
 
 Route::get('/', function () {
-// return view('welcome');
-return redirect()->route('beranda');
+    // return view('welcome');
+    return redirect()->route('beranda');
 });
 Route::get('backend/beranda', [BerandaController::class, 'berandaBackend'])->name('backend.beranda')->middleware('auth');
 
@@ -77,3 +80,57 @@ Route::middleware('is.customer')->group(function () {
     Route::post('add-to-cart/{id}', [OrderController::class, 'addToCart'])->name('order.addToCart');
     Route::get('cart', [OrderController::class, 'viewCart'])->name('order.cart');
 });
+
+Route::get('/rajaongkir_list1', function () {
+    $response = Http::withHeaders([
+        'key' => 'F6qFY7Zcb685215f8184cffenhuBtcdI'
+    ])->get('https://rajaongkir.komerce.id/api/v1/destination/province'); //bisa ganti dengan 'province' atau 'city'
+    // $statusCode = $response->json()['rajaongkir']['status']['code'];
+    // $provisi = $response->json()['rajaongkir']['results'];
+    dd($response->json());
+});
+
+
+Route::get('/rajaongkir_list2', function () {
+    $response = Http::withHeaders([
+        'key' => 'F6qFY7Zcb685215f8184cffenhuBtcdI'
+    ])->get('https://rajaongkir.komerce.id/api/v1/destination/province'); //bisa ganti dengan 'province' atau 'city'
+    return $response->json();
+});
+
+// Route::get('/cek-ongkir', function () {
+//     return view('ongkir'); });
+
+// Route::get('/provinces', [RajaOngkirController::class, 'getProvinces']);
+// Route::get('/cities', [RajaOngkirController::class, 'getCities']);
+// Route::post('/cost', [RajaOngkirController::class, 'getCost']);
+
+// Group route untuk customer
+Route::middleware('is.customer')->group(function () {
+    // Route untuk menampilkan halaman akun customer
+    Route::get('/customer/akun/{id}', [CustomerController::class, 'akun'])
+        ->name('customer.akun');
+    // Route untuk mengupdate data akun customer
+    Route::put('/customer/updateakun/{id}', [CustomerController::class, 'updateAkun'])
+        ->name('customer.updateakun');
+    // Route untuk menambahkan produk ke keranjang
+    Route::get('cart', [OrderController::class, 'viewCart'])->name('order.cart');
+    Route::post('add-to-cart/{id}', [OrderController::class, 'addToCart'])->name('order.addToCart');
+    Route::post('cart/update/{id}', [OrderController::class, 'updateCart'])->name('order.updateCart');
+    Route::post('remove/{id}', [OrderController::class, 'removeFromCart'])->name('order.remove');
+    // rajaongkir
+    Route::post('select-shipping', [OrderController::class, 'selectShipping'])->name('order.selectShipping');
+    Route::post('update-ongkir', [OrderController::class, 'updateOngkir'])->name('order.update-ongkir');
+    // pembayaran
+    Route::get('select-payment', [OrderController::class, 'selectPayment'])->name('order.selectpayment');
+});
+
+// cek_raja_ongkir_v2
+Route::get('/cek-ongkir', function () {
+    return view('cek-ongkir');
+});
+Route::get('/ongkir/get-destination', [RajaOngkirControllerV2::class, 'getDestination']);
+Route::post('/ongkir/calculate', [RajaOngkirControllerV2::class, 'calculateOngkir']);
+
+Route::post('order/complete', [OrderController::class, 'complete'])->name('order.complete');
+Route::get('history', [OrderController::class, 'orderHistory'])->name('order.history');

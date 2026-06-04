@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,6 +20,9 @@
     <!-- Slick -->
     <link type="text/css" rel="stylesheet" href="{{ asset('frontend/css/slick.css') }}">
     <link type="text/css" rel="stylesheet" href="{{ asset('frontend/css/slick-theme.css') }}">
+
+    <!-- rajaongkir request AJAX -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- nouislider -->
     <link type="text/css" rel="stylesheet" href="{{ asset('frontend/css/nouislider.min.css') }}">
@@ -92,7 +96,7 @@
                             </div>
                             <ul class="custom-menu">
                                 <li><a href="{{ route('customer.akun', ['id' => Auth::user()->id]) }}"><i class="fa fa-user-o"></i> Akun Saya</a></li>
-                                <li><a href="#"><i class="fa fa-check"></i> History</a></li>
+                                <li><a href="{{ route('order.history') }}"><i class="fa fa-check"></i> History</a></li>
                                 <li>
                                     <a href="#"
                                         onclick="event.preventDefault(); document.getElementById('keluar-app').submit();"><i class="fa fa-power-off"></i> Keluar
@@ -425,6 +429,9 @@
     <script src="{{ asset('frontend/js/nouislider.min.js') }}"></script>
     <script src="{{ asset('frontend/js/jquery.zoom.min.js') }}"></script>
     <script src="{{ asset('frontend/js/main.js') }}"></script>
+
+    <!-- rajaongkir Select2 dan AJAX -->
+    @stack('scripts')
 
 </body>
 
